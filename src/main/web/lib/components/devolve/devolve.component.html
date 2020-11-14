@@ -1,0 +1,39 @@
+<div class="lamis-edit-form">
+    <div class="lamis-edit-form-container">
+        <mat-card>
+            <ng-container *ngIf="running">
+                <div class="full-width">
+                    <mat-progress-bar class="full-width" mode="indeterminate"></mat-progress-bar>
+                    <mat-form-field class="full-width">
+                        <input [disabled]="true" matInput [value]="message"/>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="finished">
+                <div class="full-width">
+                    <mat-form-field class="full-width">
+                        <input [disabled]="true" matInput [value]="message"/>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-12">
+                        Facility:&nbsp;&nbsp;{{facility?.name}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <mat-checkbox [(ngModel)]="cparp" name="cparp">CPARP Devolvement?</mat-checkbox>
+                    </div>
+                </div>
+                <mat-card-actions>
+                    <button mat-raised-button color="primary"
+                            (click)="convert()"
+                            [disabled]="running || !facility">Generate Report
+                    </button>
+                </mat-card-actions>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

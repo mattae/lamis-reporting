@@ -1,0 +1,86 @@
+<div class="lamis-edit-form">
+    <div class="lamis-edit-form-container">
+        <form name="form" role="form" novalidate (ngSubmit)="convert()" #pharmacyForm="ngForm">
+            <mat-card class="default">
+                <ng-container *ngIf="running">
+                    <div class="full-width">
+                        <mat-progress-bar class="full-width" mode="indeterminate"></mat-progress-bar>
+                        <mat-form-field class="full-width">
+                            <input [disabled]="true" matInput [value]="message"/>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="finished">
+                    <div class="full-width">
+                        <mat-form-field class="full-width">
+                            <input [disabled]="true" matInput [value]="message"/>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+                <mat-card-content>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <mat-form-field class="full-width">
+                                <mat-label>Facilities</mat-label>
+                                <mat-select multiple [(ngModel)]="selectedFacilities"
+                                            name="facility"
+                                            #facility="ngModel"
+                                            required>
+                                    <mat-option *ngFor="let f of facilities" [value]="f.id">{{f.name}}</mat-option>
+                                </mat-select>
+                                <mat-error
+                                        *ngIf="facility.errors && (facility.dirty || facility.touched) && (facility.errors.required)">
+                                    At least 1 facility is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="full-width">
+                                <mat-label>Data Type</mat-label>
+                                <mat-select [(ngModel)]="report"
+                                            name="report"
+                                            #r="ngModel"
+                                            required>
+                                    <mat-option>Select...</mat-option>
+                                    <mat-option [value]="1">Patient Data</mat-option>
+                                    <mat-option [value]="2">Clinic Data</mat-option>
+                                    <mat-option [value]="3">Laboratory Data</mat-option>
+                                    <mat-option [value]="4">Pharmacy Data</mat-option>
+                                </mat-select>
+                                <mat-error
+                                        *ngIf="r.errors && (r.dirty || r.touched) && (r.errors.required)">
+                                    Please select data type
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="full-width" *ngIf="report === 3">
+                                <mat-label>Lab Test</mat-label>
+                                <mat-select [(ngModel)]="labTest"
+                                            name="test"
+                                            #test="ngModel"
+                                            required>
+                                    <mat-option>Select...</mat-option>
+                                    <mat-option *ngFor="let f of labTests" [value]="f.id">{{f.description}}</mat-option>
+                                </mat-select>
+                                <mat-error
+                                        *ngIf="test.errors && (test.dirty || test.touched) && (test.errors.required)">
+                                    Please select a Lab Test
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <mat-card-actions>
+                        <button mat-raised-button color="primary" [disabled]="running || pharmacyForm.invalid">Convert
+                        </button>
+                    </mat-card-actions>
+                </mat-card-content>
+            </mat-card>
+        </form>
+    </div>
+</div>

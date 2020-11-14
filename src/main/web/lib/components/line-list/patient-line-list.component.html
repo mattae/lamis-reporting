@@ -1,0 +1,300 @@
+<div class="lamis-edit-form">
+    <div class="lamis-edit-form-container">
+        <form name="form" role="form" novalidate (ngSubmit)="convert()" #plForm="ngForm">
+            <mat-card class="default">
+                <mat-card-header>
+                    Patient Information Query
+                </mat-card-header>
+                <mat-card-content>
+                    <ng-container *ngIf="running">
+                        <div class="full-width">
+                            <mat-progress-bar class="full-width" mode="indeterminate"></mat-progress-bar>
+                            <mat-form-field class="full-width">
+                                <input [disabled]="true" matInput [value]="message"/>
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="finished">
+                        <div class="full-width">
+                            <mat-form-field class="full-width">
+                                <input [disabled]="true" matInput [value]="message"/>
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+                    <fieldset>
+                        <h5>Demographic filters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Gender</mat-label>
+                                    <mat-select name="gender" [(ngModel)]="params.gender">
+                                        <mat-option></mat-option>
+                                        <mat-option value="MALE">Male</mat-option>
+                                        <mat-option value="FEMALE">Female</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>Age Range</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>From</mat-label>
+                                    <input matInput name="ageBegin" type="number" [(ngModel)]="params.ageBegin"/>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>To</mat-label>
+                                    <input matInput name="ageEnd" type="number" [(ngModel)]="params.ageEnd"/>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>State</mat-label>
+                                    <mat-select (valueChange)="stateChanged($event)">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let state of states"
+                                                    [value]="state">{{state.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>LGA of residence</mat-label>
+                                    <mat-select name="lga" [(ngModel)]="params.lgaId">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let lga of lgas" [value]="lga.id">{{lga.name}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <h5>Clinical filters</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Current Status</mat-label>
+                                    <mat-select name="currentStatus" [(ngModel)]="params.currentStatus">
+                                        <mat-option></mat-option>
+                                        <mat-option value="HIV_PLUS_NON_ART">HIV+ non ART</mat-option>
+                                        <mat-option value="ART_START">ART Start</mat-option>
+                                        <mat-option value="ART_RESTART">ART Restart</mat-option>
+                                        <mat-option value="ART_TRANSFER_IN">ART Transfer In</mat-option>
+                                        <mat-option value="ART_TRANSFER_OUT">ART Transfer Out</mat-option>
+                                        <mat-option value="PRE_ART_TRANSFER_IN">Pre-ART Transfer In</mat-option>
+                                        <mat-option value="PRE_ART_TRANSFER_OUT">Pre-ART Transfer Out</mat-option>
+                                        <mat-option value="LOST_TO_FOLLOWUP">Lost to Follow Up</mat-option>
+                                        <mat-option value="STOPPED_TREATMENT">Stopped Treatment</mat-option>
+                                        <mat-option value="KNOWN_DEATH">Known Death</mat-option>
+                                        <mat-option value="Currently Active">Currently Active</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>Date of Current Status</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>From</mat-label>
+                                    <input matInput [matDatepicker]="picker1"
+                                           [max]="today"
+                                           [(ngModel)]="params.dateCurrentStatusBegin"
+                                           name="date1">
+                                    <mat-datepicker-toggle
+                                            matSuffix
+                                            [for]="picker1">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker1></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>To</mat-label>
+                                    <input matInput [matDatepicker]="picker2"
+                                           [(ngModel)]="params.dateCurrentStatusEnd"
+                                           [max]="today"
+                                           name="date2">
+                                    <mat-datepicker-toggle
+                                            matSuffix
+                                            [for]="picker2">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker2></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Regimen Line</mat-label>
+                                    <mat-select name="regimenType" [(ngModel)]="params.regimenType">
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let type of regimenTypes"
+                                                    [value]="type.description">{{type.description}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>Date of Registration</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>From</mat-label>
+                                    <input matInput [matDatepicker]="picker3"
+                                           [max]="today"
+                                           [(ngModel)]="params.dateRegistrationBegin"
+                                           name="date3">
+                                    <mat-datepicker-toggle
+                                            matSuffix
+                                            [for]="picker3">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker3></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>To</mat-label>
+                                    <input matInput [matDatepicker]="picker4"
+                                           [max]="today"
+                                           [(ngModel)]="params.dateRegistrationEnd"
+                                           name="date4">
+                                    <mat-datepicker-toggle
+                                            matSuffix
+                                            [for]="picker4">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker4></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5>ART Start Date</h5>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>From</mat-label>
+                                    <input matInput [matDatepicker]="picker5"
+                                           [max]="today"
+                                           [(ngModel)]="params.dateStartedBegin"
+                                           name="date5">
+                                    <mat-datepicker-toggle
+                                            matSuffix
+                                            [for]="picker5">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker5></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>To</mat-label>
+                                    <input matInput [matDatepicker]="picker6"
+                                           [max]="today"
+                                           [(ngModel)]="params.dateStartedEnd"
+                                           name="date6">
+                                    <mat-datepicker-toggle
+                                            matSuffix
+                                            [for]="picker6">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker #picker6></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <mat-form-field class="full-width">
+                                    <mat-label>Current Clinical Stage</mat-label>
+                                    <mat-select name="clinicStage" [(ngModel)]="params.clinicStage">
+                                        <mat-option></mat-option>
+                                        <mat-option value="Stage I">Stage I</mat-option>
+                                        <mat-option value="Stage II">Stage II</mat-option>
+                                        <mat-option value="Stage III">Stage III</mat-option>
+                                        <mat-option value="Stage IV">Stage IV</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <fieldset>
+                            <h5>Viral Load</h5>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Last Viral Load</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>From</mat-label>
+                                        <input matInput name="viralLoadBegin" type="number"
+                                               [(ngModel)]="params.viralLoadBegin"/>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>To</mat-label>
+                                        <input matInput name="viralLoadEnd" type="number"
+                                               [(ngModel)]="params.viralLoadEnd"/>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Date of Last Viral Load</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>From</mat-label>
+                                        <input matInput [matDatepicker]="picker7"
+                                               [max]="today"
+                                               [(ngModel)]="params.dateLastViralLoadBegin"
+                                               name="date7">
+                                        <mat-datepicker-toggle
+                                                matSuffix
+                                                [for]="picker7">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker7></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-md-6">
+                                    <mat-form-field class="full-width">
+                                        <mat-label>To</mat-label>
+                                        <input matInput [matDatepicker]="picker8"
+                                               [max]="today"
+                                               [(ngModel)]="params.dateLastViralLoadEnd"
+                                               name="date8">
+                                        <mat-datepicker-toggle
+                                                matSuffix
+                                                [for]="picker8">
+                                        </mat-datepicker-toggle>
+                                        <mat-datepicker #picker8></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </fieldset>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label id="label">Output format</label>
+                            <mat-radio-group [(ngModel)]="params.format" name="format" aria-labelledby="label"
+                                             class="radio-group">
+                                <mat-radio-button [value]="'PDF'" class="radio-button">PDF</mat-radio-button>
+                                <mat-radio-button [value]="'xlsx'" class="radio-button">Excel</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                    <mat-card-actions>
+                        <button mat-raised-button color="primary"
+                                [disabled]="running || !facility">Generate Report
+                        </button>
+                    </mat-card-actions>
+                </mat-card-content>
+            </mat-card>
+        </form>
+    </div>
+</div>

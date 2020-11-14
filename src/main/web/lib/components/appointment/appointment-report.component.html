@@ -1,0 +1,54 @@
+<div class="lamis-edit-form">
+    <div class="lamis-edit-form-container">
+        <mat-card>
+            <ng-container *ngIf="running">
+                <div class="full-width">
+                    <mat-progress-bar class="full-width" mode="indeterminate"></mat-progress-bar>
+                    <mat-form-field class="full-width">
+                        <input [disabled]="true" matInput [value]="message"/>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="finished">
+                <div class="full-width">
+                    <mat-form-field class="full-width">
+                        <input [disabled]="true" matInput [value]="message"/>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <mat-card-content>
+                <div class="row">
+                    <div class="col-md-12">
+                        Facility:&nbsp;&nbsp;{{facility?.name}}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ejs-daterangepicker placeholder="Period" [format]="'dd MMM yyyy'"
+                                             [depth]="'Year'"
+                                             [(value)]="dateRange">
+                        </ejs-daterangepicker>
+                    </div>
+                    <div class="col-md-6">
+                        <mat-form-field>
+                            <mat-select placeholder="Type" [(ngModel)]="type" name="type">
+                                <mat-option value="MISSED_REFILL">Missed Refill Appointment</mat-option>
+                                <mat-option value="MISSED_CLINIC">Missed Clinic Appointment</mat-option>
+                                <mat-option value="MISSED_APPOINTMENT">Missed Appointment</mat-option>
+                                <mat-option value="SCHEDULED_REFILL">Scheduled Refill Visit</mat-option>
+                                <mat-option value="SCHEDULED_CLINIC">Scheduled Clinic Visit</mat-option>
+                                <mat-option value="SCHEDULED_VISIT">Scheduled Visit</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <mat-card-actions>
+                    <button mat-raised-button color="primary"
+                            (click)="convert()"
+                            [disabled]="running || !type || !facility">Generate Report
+                    </button>
+                </mat-card-actions>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

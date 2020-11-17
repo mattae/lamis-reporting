@@ -36,7 +36,7 @@ menus:
           - state: line-list
             name: Line List
             type: LINK
-umdLocation: /across/resources/static/reporting/js/bundles/lamis-reporting-1.4.0.umd.min.js
+umdLocation: /across/resources/static/reporting/js/bundles/lamis-reporting-1.4.1.umd.min.js
 webModules:
   - breadcrumb: REPORTS MODULE
     name: ReportsModule

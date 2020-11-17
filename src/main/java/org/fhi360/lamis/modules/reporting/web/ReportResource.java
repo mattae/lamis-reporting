@@ -51,9 +51,9 @@ public class ReportResource {
 
     @GetMapping("/biometric-report")
     public void biometricReport(@RequestParam LocalDate start, @RequestParam LocalDate end, @RequestParam Long facilityId,
-                                HttpServletResponse response) throws IOException {
+                                @RequestParam Boolean pdf, HttpServletResponse response) throws IOException {
         messagingTemplate.convertAndSend("/topic/biometric-report/status", "start");
-        ByteArrayOutputStream baos = biometricEnrollmentReportService.fingerprintEnrollmentReport(facilityId, start, end);
+        ByteArrayOutputStream baos = biometricEnrollmentReportService.fingerprintEnrollmentReport(facilityId, start, end, pdf);
         setStream(baos, response);
         messagingTemplate.convertAndSend("/topic/biometric-report/status", "end");
     }

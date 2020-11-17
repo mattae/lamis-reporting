@@ -30,7 +30,7 @@ export class BiometricReportComponent implements OnInit, OnDestroy {
     };
     today = new Date();
     todaySelectable = true;
-
+    pdf = true;
     current: boolean = false;
 
     constructor(private service: ReportService, private stompService: RxStompService, private domSanitizer: DomSanitizer) {
@@ -61,9 +61,10 @@ export class BiometricReportComponent implements OnInit, OnDestroy {
         this.service.biometricReport({
             start: this.dateRange.start,
             end: this.dateRange.end,
-            facilityId: this.facility.id
+            facilityId: this.facility.id,
+            pdf: !!this.pdf
         }).subscribe((res) => {
-            const file = new File([res], this.facility.name + '_Biometric Report.pdf', {type: 'application/octet-stream'});
+            const file = new File([res], this.facility.name + '_Biometric Report.' + (this.pdf ? 'pdf' : 'xlsx'), {type: 'application/octet-stream'});
             saveAs(file);
         })
     }

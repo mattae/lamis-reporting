@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.fhi360.lamis.modules</groupId>
     <artifactId>reporting</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
     <name>LAMIS Reporting Module</name>
 
     <properties>

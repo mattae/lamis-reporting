@@ -42,6 +42,7 @@ export class ReportService {
         params = params.append('start', moment(param.start).format(DATE_FORMAT));
         params = params.append("facilityId", param.facilityId.toString());
         params = params.append('end', moment(param.end).format(DATE_FORMAT));
+        params = params.append("pdf", param.pdf);
         return this.http.get(`${this.resourceUrl}/biometric-report`, {params, responseType: 'blob'})
     }
 
